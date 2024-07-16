@@ -11,35 +11,49 @@ import math
 
 # Domain definition:
 x1 = 0
-x2 = 2
+x2 = 1
 h = 0.01
 
 # Problem definition:
-E = 10E+9
-A = 1
-P = 100
+L = x2 - x1
+E = 90
+I = 2
+P = 10
 
 # Plot options:
 plot_solution = 'y'
-plot_error = 'y'
+plot_error = 'n'
 
 def f(x):
     return 0
 
+## Add the variables y1, theta1, y2, theta2.
 def g1(x):
     return 0
 
 def g2(x):
-    return 1
-
-def h1(x):
     return 0
 
-def h2(x):
+#def g3(x):
+#    return 0
+
+#def g3(x):
+#    return 0
+
+#def h1(x):
+#    return 0
+
+#def h2(x):
+#    return 0
+
+def h3(x):
     return P
 
+def h4(x):
+    return 0
+
 def mu(x):
-    return E*A
+    return E*I
 
 def beta(x):
     return 0
@@ -48,7 +62,7 @@ def sigma(x):
     return 0
 
 def u_analytical(x):
-    return (P/E*A)*x
+    return -P/(6*E*I)*np.power(x, 3) + P*L/(2*E*I)*np.power(x, 2)
 
 def grad_u_analytical(x):
-    return P/E*A
+    return -P/(2*E*I)*np.power(x, 2) + P*L/(E*I)*np.power(x, 1)

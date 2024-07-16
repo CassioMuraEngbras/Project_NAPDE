@@ -19,6 +19,7 @@ class Local_element:
         self.x2 = point_2
         self.T = [[1, point_1[0]],[1, point_2[0]]]
 
+    ''' Solution solving the integrals using the Gauss quadrature:
     def phi(self, n, x_):
         # Coefficients of the basis function:
         a0 = np.linalg.inv(self.T)[0][n]
@@ -68,7 +69,18 @@ class Local_element:
 
                 F_local_[m] += abs(det_J)*quadrature_weight*data.f(x_)*phi_m
         return F_local_
-    
-    def A_local_Trivial(self):
-        A_local_ = data.mu(self.x1)/(self.x2 - self.x1)*[[1, -1],[-1, 1]]
+    '''
+
+    def A_local(self):
+        l = self.x2[0] - self.x1[0]
+        A_local_ = (data.mu(self.x1)/np.power(l, 2))*np.array([[12/l, 6, -12/l, 6], 
+                                                               [6, 4*l, -6, 2*l], 
+                                                               [-12/l, -6, 12/l, -6], 
+                                                               [6, 2*l, -6, 4*l]])
         return A_local_
+    
+    def F_local(self):
+        l = self.x2[0] - self.x1[0]
+        q  = data.f(self.x1)
+        F_local_ = [q*l/2, q*np.power(l, 2)/12, q*l/2, q*np.power(l, 2)/12]
+        return F_local_

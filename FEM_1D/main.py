@@ -28,7 +28,8 @@ def main():
     for local_element in mesh.elements:
         for m in range(2):
             for n in range(2):
-                A[mesh.elements_nodes[element][m]][mesh.elements_nodes[element][n]] += local_element.A_local()[m][n]
+                #A[mesh.elements_nodes[element][m]][mesh.elements_nodes[element][n]] += local_element.A_local()[m][n]
+                A[mesh.elements_nodes[element][m]][mesh.elements_nodes[element][n]] += local_element.A_local_Trivial()[m][n]
         element = element + 1 
 
     F = np.zeros(mesh.ndof)
@@ -53,11 +54,13 @@ def main():
     # Plot the solution
     if data.plot_solution == 'y':
         fig = plt.figure()
-        plt.plot(mesh.coord, U, label = "Finite Element Method")
+        #plt.plot(mesh.coord, U, label = "Finite Element Method")
+        #sc = plt.scatter(mesh.coord, U, c = U, cmap = 'jet',label = "Finite Element Method")
+        sc = plt.scatter(mesh.coord, 0*mesh.coord, c = U, cmap = 'jet', marker='s')
+        plt.colorbar(sc)
         plt.xlabel('x')
         plt.ylabel('y')
         plt.title('Finite Element Solver: 1D Laplacian')
-        plt.legend(fancybox=True, framealpha=1, shadow=True, borderpad=1)
         plt.draw()
 
     # 6. Computing the error:
