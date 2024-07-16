@@ -5,7 +5,7 @@ Project: NAPDE FEM 1D
 Title: config_packages.py
 """
 import importlib
-module_name = "data.data_ex1"
+module_name = "data.data_ex2"
 data = importlib.import_module(module_name)
 
 # Basic packages:

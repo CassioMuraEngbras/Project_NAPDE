@@ -10,7 +10,8 @@ from config_packages import np, math, plt, cm, data
 def impose_boundary_conditions(A, F, mesh):
     g = np.zeros(mesh.ndof)
     A, F, g = impose_Dirichlet("left", A, F, g, mesh)
-    A, F, g = impose_Dirichlet("right", A, F, g, mesh)
+    #A, F, g = impose_Dirichlet("right", A, F, g, mesh)
+    F = impose_Neumann("right", F, mesh)
     return A, F, g
 
 
@@ -40,3 +41,12 @@ def impose_Dirichlet(wall, A_, F_, g_, mesh_):
         F[bc_index] = 0 
     
     return A, F, g
+
+def impose_Neumann(wall, F_, mesh_):
+    F = F_
+    for i in range(len(mesh_.nodes)):
+        if (wall == "left" and mesh_.nodes[i] == mesh_.nodes[0]):
+            F[0]  = F_[0] - data.h1(mesh_.nodes[i])*1
+        elif (wall == "right" and mesh_.nodes[i] == mesh_.nodes[-1]):
+            F[-1] = F_[-1] + data.h2(mesh_.nodes[i])*1
+    return F
