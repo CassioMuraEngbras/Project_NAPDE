@@ -105,11 +105,32 @@ def main():
         plt.title('Finite Element Solver: Euler-Bernoulli Beam')
         plt.draw()
 
-    # 6. Computing the error:
-    #logging.info("(6/6) Computing errors ...")
-    #L2_error, H1_error = post_processing.compute_errors(U, mesh)
-    #print(f"L2 Error = {L2_error}")
-    #print(f"H1 Error = {H1_error}")
+    # 6. Post-Processing:
+    logging.info("(6/6) Computing post-process ...")
+    M = post_processing.bending_moment(mesh, U)
+    V = post_processing.shear_force(mesh, U)
+
+    fig = plt.figure(3)
+    plt.plot(mesh.coord, data.M_analytical(mesh.coord), color = "black", label = "Analytical Solution")
+    sc = plt.scatter(mesh.coord, M, c = M, cmap = 'jet', label = "Finite Element Method")
+    plt.colorbar(sc)
+    plt.xlabel('x')
+    plt.ylabel('M')
+    plt.legend(loc="upper left")
+    plt.title('Finite Element Solver: Euler-Bernoulli Beam')
+    plt.draw()
+    
+    fig = plt.figure(4)
+    plt.plot(mesh.coord, data.V_analytical(mesh.coord), color = "black", label = "Analytical Solution")
+    sc = plt.scatter(mesh.coord, V, c = V, cmap = 'jet', label = "Finite Element Method")
+    plt.colorbar(sc)
+    plt.xlabel('x')
+    plt.ylabel('V')
+    plt.ylim(-2*data.P, 2*data.P)
+    plt.legend(loc="upper left")
+    plt.title('Finite Element Solver: Euler-Bernoulli Beam')
+    plt.draw()
+
 
     # 7. Finish the program:
     plt.show()

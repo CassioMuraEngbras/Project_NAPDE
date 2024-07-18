@@ -7,6 +7,62 @@ Title: post_processing.py
 # Basic packages:
 from config_packages import np, math, plt, cm, data
 
+''' Basis function:
+def psi(mesh, x):
+    h = mesh.h
+    psi1 = 1 - 3*np.power(x/h, 2) + 2*np.power(x/h, 3)
+    psi2 = -x*np.power(1 - x/h, 2)
+    psi3 = np.power(x/h, 2)*(3 - 2*x/h)
+    psi4 = h*np.power(x/h, 2)*(1 - x/h)
+    return np.array([psi1, psi2, psi3, psi4])
+
+def dpsi(mesh, x):
+    h = mesh.h
+    dpsi1 = -(6/h)*(x/h)*(1 - x/h)
+    dpsi2 = -1 + 4*x/h - 3*np.power(x/h, 2)
+    dpsi3 = -dpsi1
+    dpsi4 = (x/h)*(2 - 3*x/h)
+    return np.array([dpsi1, dpsi2, dpsi3, dpsi4])
+'''
+def ddpsi(mesh, x):
+    h = mesh.h
+    ddpsi1 = -(6/np.power(h, 2))*(1 - 2*x/h)
+    #ddpsi2 = -(2/h)*(3*x/h - 2)
+    ddpsi2 = (2/h)*(3*x/h - 2)
+    ddpsi3 = - ddpsi1
+    #ddpsi4 = (2/h)*(1 - 3*x/h)
+    ddpsi4 = -(2/h)*(1 - 3*x/h)
+    return np.array([ddpsi1, ddpsi2, ddpsi3, ddpsi4])
+
+def dddpsi(mesh, x):
+    h = mesh.h
+    dddpsi1 = 12/np.power(h, 3)
+    #dddpsi2 = -6/np.power(h, 2)
+    dddpsi2 = 6/np.power(h, 2)
+    dddpsi3 = -12/np.power(h, 3)
+    #dddpsi4 = -6/np.power(h, 2)
+    dddpsi4 = 6/np.power(h, 2)
+    return np.array([dddpsi1, dddpsi2, dddpsi3, dddpsi4])
+
+def bending_moment(mesh, U):
+    M = []
+    for i in range(len(mesh.coord) - 1):
+        U_element = np.array([U[2*i], U[2*i+1], U[2*i+2], U[2*i+3]])
+        M.append(-data.E*data.I*np.dot(ddpsi(mesh, 0), U_element))
+        if i == len(mesh.coord) - 2:
+           M.append(-data.E*data.I*np.dot(ddpsi(mesh, mesh.h), U_element)) 
+    return M
+
+def shear_force(mesh, U):
+    V = []
+    for i in range(len(mesh.coord) - 1):
+        U_element = np.array([U[2*i], U[2*i+1], U[2*i+2], U[2*i+3]])
+        V.append(-data.E*data.I*np.dot(dddpsi(mesh, 0), U_element))
+        if i == len(mesh.coord) - 2:
+           V.append(-data.E*data.I*np.dot(dddpsi(mesh, mesh.h), U_element)) 
+    return V
+    
+'''' -------------- Error Calculation -----------------
 # Should have been called interpolate:
 def u_h(x , x1, y1, x2, y2):
         return (x - x1)*(y2 - y1)/(x2 - x1) + y1
@@ -68,3 +124,4 @@ def compute_errors(U, mesh):
         plt.show()
         
     return L2_error, H1_error
+    '''

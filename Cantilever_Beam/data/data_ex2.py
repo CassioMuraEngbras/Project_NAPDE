@@ -12,7 +12,7 @@ import math
 # Domain definition:
 x1 = 0
 x2 = 1
-h = 0.01
+h = 0.1
 
 # Problem definition:
 L = x2 - x1
@@ -66,3 +66,9 @@ def u_analytical(x):
 
 def grad_u_analytical(x):
     return -P/(2*E*I)*np.power(x, 2) + P*L/(E*I)*np.power(x, 1)
+
+def M_analytical(x):
+    return P*(x - L)
+
+def V_analytical(x):
+    return P + 0*x

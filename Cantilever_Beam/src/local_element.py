@@ -8,8 +8,8 @@ Title: local_element.py
 from config_packages import np, math, plt, cm, data
 
 # Gaussian quadrature points:
-quad_points = [-math.sqrt(3/5), 0 , + math.sqrt(3/5)]
-quad_weights = [5/9, 8/9 , 5/9]
+#quad_points = [-math.sqrt(3/5), 0 , + math.sqrt(3/5)]
+#quad_weights = [5/9, 8/9 , 5/9]
 
 class Local_element:
     def __init__(self, point_1, point_2, index_node_1, index_node_2):
@@ -17,8 +17,24 @@ class Local_element:
         self.index_node_2 = index_node_2
         self.x1 = point_1
         self.x2 = point_2
-        self.T = [[1, point_1[0]],[1, point_2[0]]]
+        #self.T = [[1, point_1[0]],[1, point_2[0]]]
 
+    # Simplification: EI constant, f constant.
+    def A_local(self):
+        l = self.x2[0] - self.x1[0]
+        A_local_ = (data.mu(self.x1)/np.power(l, 2))*np.array([[12/l, 6, -12/l, 6], 
+                                                               [6, 4*l, -6, 2*l], 
+                                                               [-12/l, -6, 12/l, -6], 
+                                                               [6, 2*l, -6, 4*l]])
+        return A_local_
+    
+    # Simplification: EI constant, f constant.
+    def F_local(self):
+        l = self.x2[0] - self.x1[0]
+        q  = data.f(self.x1)
+        F_local_ = [q*l/2, q*np.power(l, 2)/12, q*l/2, q*np.power(l, 2)/12]
+        return F_local_
+    
     ''' Solution solving the integrals using the Gauss quadrature:
     def phi(self, n, x_):
         # Coefficients of the basis function:
@@ -70,17 +86,3 @@ class Local_element:
                 F_local_[m] += abs(det_J)*quadrature_weight*data.f(x_)*phi_m
         return F_local_
     '''
-
-    def A_local(self):
-        l = self.x2[0] - self.x1[0]
-        A_local_ = (data.mu(self.x1)/np.power(l, 2))*np.array([[12/l, 6, -12/l, 6], 
-                                                               [6, 4*l, -6, 2*l], 
-                                                               [-12/l, -6, 12/l, -6], 
-                                                               [6, 2*l, -6, 4*l]])
-        return A_local_
-    
-    def F_local(self):
-        l = self.x2[0] - self.x1[0]
-        q  = data.f(self.x1)
-        F_local_ = [q*l/2, q*np.power(l, 2)/12, q*l/2, q*np.power(l, 2)/12]
-        return F_local_
